@@ -9,18 +9,13 @@ import tseslint from "typescript-eslint";
 // eslint-disable-next-line no-undef
 const __dirname = new URL(".", import.meta.url).pathname;
 
+/** @type {import('eslint').Config} */
 export default [
   { ignores: ["dist"] }, // 📦 Ignore the 'dist' folder, we don't care about bundled stuff here!
   js.configs.recommended, // ✅ Use ESLint's recommended rules - good starting point!
   ...tseslint.configs.recommended, // 📝 Add TypeScript's recommended rules - because we love types!
   {
     files: ["**/*.{ts,tsx}"], // 🔍 Apply these rules to all TypeScript and TSX files
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs["recommended-latest"],
-      reactRefresh.configs.vite,
-    ],
     languageOptions: {
       ecmaVersion: 2020, // ECMA Version
       globals: {
