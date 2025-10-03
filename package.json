@@ -15,6 +15,7 @@
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.27.1",
     "@eslint/js": "latest",
     "@react-scan/vite-plugin-react-scan": "^0.1.8",
     "@tailwindcss/vite": "^4.1.14",

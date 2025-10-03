@@ -3,13 +3,23 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-// https://vite.dev/config/
+const useCompiler =
+  process.argv.includes("--compiler") ||
+  process.argv.includes("-c") ||
+  process.env.NODE_ENV === "production";
+
+/** @type {import('vite').UserConfig} */
 export default defineConfig({
+  server: {
+    hmr: !useCompiler,
+  },
   plugins: [
     tailwindcss(),
     react({
       babel: {
-        plugins: [["babel-plugin-react-compiler", { target: "19" }]],
+        plugins: useCompiler
+          ? [["babel-plugin-react-compiler", { target: "19" }]]
+          : [],
       },
     }),
     reactScan({

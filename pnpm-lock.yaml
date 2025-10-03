@@ -18,6 +18,9 @@ importers:
         specifier: ^19.1.1
         version: 19.2.0(react@19.2.0)
     devDependencies:
+      '@babel/plugin-transform-react-jsx':
+        specifier: ^7.27.1
+        version: 7.27.1(@babel/core@7.28.4)
       '@eslint/js':
         specifier: latest
         version: 9.37.0
