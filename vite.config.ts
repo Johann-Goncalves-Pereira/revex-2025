@@ -1,17 +1,18 @@
-import reactScan from "@react-scan/vite-plugin-react-scan";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
 
-// @ts-expect-error - Plugin type compatibility issues with rolldown-vite
-export default defineConfig(({ mode }) => {
-  const useCompiler = mode === "compiler" || mode === "production";
-
+export default defineConfig(() => {
   return {
+    mode: "development",
+    define: {
+      "process.env.NODE_ENV": '"development"',
+      __DEV__: true,
+    },
     server: {
-      hmr: !useCompiler,
+      hmr: true,
     },
     plugins: [
       tailwindcss(),
@@ -19,16 +20,9 @@ export default defineConfig(({ mode }) => {
         autoCodeSplitting: true,
       }),
       react({
+        jsxRuntime: "automatic",
         babel: {
-          plugins: useCompiler
-            ? [["babel-plugin-react-compiler", { target: "19" }]]
-            : [],
-        },
-      }),
-      reactScan({
-        autoDisplayNames: true,
-        scanOptions: {
-          trackUnnecessaryRenders: true,
+          plugins: [],
         },
       }),
     ],
