@@ -42,7 +42,6 @@ const config = {
     "<THIRD_PARTY_MODULES>", // Third-party modules
     "^@/(.*)$", // Root imports (@/*)
     "^@(?:/)?components/(.*)$", // Component imports
-    "^@(?:/)?context/(.*)$", // Context API imports
     "^@(?:/)?hooks/(.*)$", // Custom hooks imports
     "^@(?:/)?icons/(.*)$", // Icon imports
     "^@(?:/)?layout/(.*)$", // Layout component imports

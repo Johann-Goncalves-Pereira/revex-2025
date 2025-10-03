@@ -32,7 +32,6 @@
       "@layout/*": ["./src/layout/*"],
       "@utils/*": ["./src/utils/*"],
       "@pages/*": ["./src/pages/*"],
-      "@routes/*": ["./src/routes/*"],
       "@shared/*": ["./src/shared/*"],
       "@/*": ["./src/*"]
     }

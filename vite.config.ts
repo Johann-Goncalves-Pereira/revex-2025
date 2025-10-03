@@ -37,7 +37,6 @@ export default defineConfig(({ mode }) => {
         "@layout": path.resolve(__dirname, "./src/layout"), // Layout components directory alias
         "@utils": path.resolve(__dirname, "./src/utils"), // Utility functions directory alias
         "@pages": path.resolve(__dirname, "./src/pages"), // Page components directory alias
-        "@routes": path.resolve(__dirname, "./src/routes"), // Application routes directory alias
         "@shared": path.resolve(__dirname, "./src/shared"), // Shared resources directory alias
         "@": path.resolve(__dirname, "./src"), // Root source directory alias
       },
