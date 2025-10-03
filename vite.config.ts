@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
 
-/** @type {import('vite').UserConfig} */
+// @ts-expect-error - Plugin type compatibility issues with rolldown-vite
 export default defineConfig(({ mode }) => {
   const useCompiler = mode === "compiler" || mode === "production";
 
@@ -16,7 +16,6 @@ export default defineConfig(({ mode }) => {
     plugins: [
       tailwindcss(),
       tanstackRouter({
-        target: "react",
         autoCodeSplitting: true,
       }),
       react({
@@ -29,7 +28,7 @@ export default defineConfig(({ mode }) => {
       reactScan({
         autoDisplayNames: true,
         scanOptions: {
-          trackUnnecessaryRenders: true, // Enable tracking of unnecessary re-renders in React components
+          trackUnnecessaryRenders: true,
         },
       }),
     ],

@@ -1,31 +1,12 @@
-import RootLayout from "@layout/Root";
-import About from "@pages/About";
-import Home from "@pages/Home";
-import {
-  createRootRoute,
-  createRoute,
-  createRouter,
-  RouterProvider,
-} from "@tanstack/react-router";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 
-const Root = createRootRoute({ component: RootLayout });
+// Import the generated route tree
+import { routeTree } from "./routeTree.gen";
 
-const IndexRoute = createRoute({
-  getParentRoute: () => Root,
-  path: "/",
-  component: Home,
-});
-
-const AboutRoute = createRoute({
-  getParentRoute: () => Root,
-  path: "/about",
-  component: About,
-});
-
-const routeTree = Root.addChildren([IndexRoute, AboutRoute]);
-
+// Create a new router instance
 const router = createRouter({ routeTree });
 
+// Register the router instance for type safety
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
