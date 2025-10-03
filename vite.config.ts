@@ -1,18 +1,22 @@
+import reactScan from "@react-scan/vite-plugin-react-scan";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+  const isProduction = mode === "production";
+
   return {
-    mode: "development",
     define: {
-      "process.env.NODE_ENV": '"development"',
-      __DEV__: true,
+      "process.env.NODE_ENV": JSON.stringify(
+        isProduction ? "production" : "development"
+      ),
+      __DEV__: !isProduction,
     },
     server: {
-      hmr: true,
+      hmr: true, // Always enable HMR for development
     },
     plugins: [
       tailwindcss(),
@@ -22,9 +26,29 @@ export default defineConfig(() => {
       react({
         jsxRuntime: "automatic",
         babel: {
-          plugins: [],
+          plugins: isProduction
+            ? [
+                [
+                  "babel-plugin-react-compiler",
+                  {
+                    target: "19",
+                  },
+                ],
+              ]
+            : [], // No React Compiler in development - keeps HMR working
         },
       }),
+      // Only add react-scan in development for debugging
+      ...(!isProduction
+        ? [
+            reactScan({
+              autoDisplayNames: true,
+              scanOptions: {
+                trackUnnecessaryRenders: true,
+              },
+            }),
+          ]
+        : []),
     ],
     resolve: {
       alias: {
