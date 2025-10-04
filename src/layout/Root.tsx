@@ -3,19 +3,24 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 function RootLayout() {
   return (
-    <>
-      <div className='p-2 flex gap-2'>
-        <Link to='/' className='[&.active]:font-bold'>
+    <div className='bg-gray-200 min-h-dvh dark:bg-stone-950 text-stone-950 dark:text-gray-50'>
+      <header className='px-8 py-4 relative flex gap-4 items-center backdrop-blur-[2px]'>
+        <Link to='/' className='[&.active]:font-bold pt-1'>
           Home
         </Link>{" "}
-        <Link to='/about' className='[&.active]:font-bold'>
+        <Link to='/about' className='[&.active]:font-bold pt-1'>
           About
         </Link>
-      </div>
-      <hr />
+        <div
+          className='absolute inset-x-px top-full h-8 rounded-t-2xl'
+          style={{
+            boxShadow: "0 -24px 16px 8px hsl(0, 0%, 0%, .35) ",
+          }}
+        />
+      </header>
       <Outlet />
       <TanStackRouterDevtools />
-    </>
+    </div>
   );
 }
 
