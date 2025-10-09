@@ -1,6 +1,5 @@
 import reactScan from "@react-scan/vite-plugin-react-scan";
 import tailwindcss from "@tailwindcss/vite";
-import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
@@ -21,9 +20,6 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       tailwindcss(),
-      tanstackRouter({
-        autoCodeSplitting: true,
-      }),
       react({
         jsxRuntime: "automatic",
         babel: {
