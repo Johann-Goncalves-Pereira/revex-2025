@@ -1,4 +1,3 @@
-import reactScan from "@react-scan/vite-plugin-react-scan";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -7,6 +6,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig(({ mode }) => {
   const isProduction = mode === "production";
+  const compiler = [["babel-plugin-react-compiler", { target: "19" }]];
 
   return {
     define: {
@@ -22,35 +22,7 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       react({
         jsxRuntime: "automatic",
-        babel: {
-          plugins: isProduction
-            ? [
-                [
-                  "babel-plugin-react-compiler",
-                  {
-                    target: "19",
-                  },
-                ],
-              ]
-            : [], // No React Compiler in development - keeps HMR working
-        },
-      }),
-      // Only add react-scan in development for debugging
-      ...(!isProduction
-        ? [
-            reactScan({
-              autoDisplayNames: true,
-              scanOptions: {
-                trackUnnecessaryRenders: true,
-              },
-            }),
-          ]
-        : []),
-      reactScan({
-        autoDisplayNames: true,
-        scanOptions: {
-          trackUnnecessaryRenders: true, // Enable tracking of unnecessary re-renders in React components
-        },
+        babel: { plugins: isProduction ? compiler : [] },
       }),
     ],
     resolve: {
