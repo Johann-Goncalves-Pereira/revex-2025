@@ -2,9 +2,11 @@
 
 ## Architecture Overview
 
-This is a modern React 19 application using TanStack Router for file-based routing. The app structure follows:
+This is a modern React 19 application using TanStack Router for file-based
+routing. The app structure follows:
 
-- `src/routes/` - File-based routes (e.g., `index.tsx` for `/`, `__root.tsx` for layout)
+- `src/routes/` - File-based routes (e.g., `index.tsx` for `/`, `__root.tsx` for
+  layout)
 - `src/pages/` - Page components referenced by routes
 - `src/components/` - Reusable components
 - `src/layout/` - Layout components (e.g., `Root.tsx` wraps all routes)
@@ -13,9 +15,12 @@ This is a modern React 19 application using TanStack Router for file-based routi
 
 ### Routing
 
-- Use TanStack Router's file-based routing: create route files in `src/routes/` following the file path structure
-- Routes export a `Route` object created with `createFileRoute(path)` or `createRootRoute()`
-- The root route (`__root.tsx`) defines the layout component that wraps all pages
+- Use TanStack Router's file-based routing: create route files in `src/routes/`
+  following the file path structure
+- Routes export a `Route` object created with `createFileRoute(path)` or
+  `createRootRoute()`
+- The root route (`__root.tsx`) defines the layout component that wraps all
+  pages
 - Route tree is auto-generated in `src/routeTree.gen.ts` - never edit this file
 
 ### Path Aliases
@@ -39,8 +44,10 @@ Available aliases:
 
 ### React Compiler
 
-- React Compiler is enabled in production builds only (keeps HMR working in development)
-- Follow React Compiler rules: avoid unsupported patterns that break optimization
+- React Compiler is enabled in production builds only (keeps HMR working in
+  development)
+- Follow React Compiler rules: avoid unsupported patterns that break
+  optimization
 - ESLint will enforce React Compiler compliance
 
 ### Styling
@@ -88,12 +95,13 @@ pnpm generate-types  # Generate translation types (if applicable)
 
 ```typescript
 // src/routes/example.tsx
-import { createFileRoute } from "@tanstack/react-router";
-import ExamplePage from "@pages/Example";
+import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/example")({
-  component: ExamplePage,
-});
+import ExamplePage from '@pages/Example'
+
+export const Route = createFileRoute('/example')({
+	component: ExamplePage,
+})
 ```
 
 ### Page Components
@@ -127,10 +135,12 @@ function RootLayout() {
 
 - Strict mode enabled with comprehensive linting
 - Path aliases configured in both `tsconfig.app.json` and Vite
-- Separate configs for app code (`tsconfig.app.json`) and build tools (`tsconfig.node.json`)
+- Separate configs for app code (`tsconfig.app.json`) and build tools
+  (`tsconfig.node.json`)
 
 ## Performance Considerations
 
 - React Compiler optimizes production builds
 - React Scan helps identify performance issues in development
-- Vite's fast refresh works alongside React Compiler (disabled in dev to preserve HMR)
+- Vite's fast refresh works alongside React Compiler (disabled in dev to
+  preserve HMR)

@@ -1,5 +1,5 @@
 function Home() {
-  return <div className='p-4'>aaaaa</div>;
+	return <div className='p-4'>aaaaa</div>
 }
 
-export default Home;
+export default Home
