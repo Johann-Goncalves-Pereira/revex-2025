@@ -69,8 +69,7 @@ See `src/features/todos/` for a complete reference implementation.
 
 ## AI guidelines
 
-- **Cursor**: `.cursor/rules/` (always read `core-standards.mdc`)
-- **Copilot**: `.github/copilot-instructions.md`
+- **Cursor rules**: `.cursor/rules/` (always read `core-standards.mdc` and `code-style.mdc`)
 - **Agents**: `AGENTS.md`
 
 ## Creating a new feature

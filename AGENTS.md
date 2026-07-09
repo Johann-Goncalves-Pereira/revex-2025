@@ -24,7 +24,7 @@ pnpm lint:fix   # corrigir lint
 
 ## Regras obrigatórias
 
-Leia `.cursor/rules/` — especialmente `core-standards.mdc` (sempre ativa).
+Leia `.cursor/rules/` — especialmente `core-standards.mdc` e `code-style.mdc` (sempre ativas).
 
 ### Nunca faça
 
