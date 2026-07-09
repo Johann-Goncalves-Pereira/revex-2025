@@ -3,7 +3,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { scan } from 'react-scan'
 
-import App from './App.tsx'
+import App from '@app/App'
+
 import './main.css'
 
 if (import.meta.env.DEV) {

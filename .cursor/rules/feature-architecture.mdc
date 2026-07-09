@@ -1,0 +1,21 @@
+---
+description: Feature module architecture
+globs: src/features/**
+alwaysApply: false
+---
+
+# Feature Architecture
+
+```
+features/<name>/
+  api/          # schemas, api calls, query keys, queries
+  store/        # Zustand stores (UI state only)
+  components/   # feature UI
+  hooks/        # orchestration hooks
+  index.ts      # public API
+```
+
+- `*.schema.ts` — Zod schemas; export types via `z.infer`.
+- `*.query-keys.ts` — query key factory with `as const`.
+- `*.queries.ts` — `queryOptions()` + hooks.
+- Do not import another feature's internals; use its `index.ts` or shared `@lib`.

@@ -1,0 +1,14 @@
+---
+description: Core coding standards for the boilerplate
+alwaysApply: true
+---
+
+# Core Standards
+
+- Use path aliases (`@app`, `@features`, `@lib`, `@components`, `@pages`) — never `../` from routes, pages, app, or layout.
+- Keep `routes/` and `pages/` thin: wire UI only, no business logic.
+- Put domain logic in `src/features/<feature>/` with colocated api, store, hooks, and components.
+- Export feature public APIs from `src/features/<feature>/index.ts`.
+- Run `pnpm validate` before opening a PR. ESLint uses `--max-warnings 0`.
+- Never use `any`, `enum`, or type assertions (`as`). Prefer Zod schemas + `z.infer`.
+- Never duplicate types that can be inferred from schemas or `as const` + `satisfies`.

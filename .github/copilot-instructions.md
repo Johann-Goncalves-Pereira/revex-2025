@@ -2,145 +2,98 @@
 
 ## Architecture Overview
 
-This is a modern React 19 application using TanStack Router for file-based
-routing. The app structure follows:
+Modern React 19 SPA with feature-based architecture:
 
-- `src/routes/` - File-based routes (e.g., `index.tsx` for `/`, `__root.tsx` for
-  layout)
-- `src/pages/` - Page components referenced by routes
-- `src/components/` - Reusable components
-- `src/layout/` - Layout components (e.g., `Root.tsx` wraps all routes)
+- `src/app/` — Bootstrap, providers, router setup
+- `src/routes/` — File-based routes (thin wiring only)
+- `src/pages/` — Page composition (imports from features)
+- `src/features/` — Domain modules with colocated api, store, hooks, components
+- `src/components/` — Shared UI primitives
+- `src/lib/` — env validation, api client, query client
+- `src/layout/` — Root layout shell
 
-## Key Patterns & Conventions
+## Typing (Zod-first)
 
-### Routing
+- Define Zod schemas as the single source of truth
+- Infer types: `type Todo = z.infer<typeof todoSchema>`
+- Never duplicate types with interfaces
+- Validate env in `@lib/env.ts` and API responses in `@lib/api-client.ts`
+- Forbidden: `any`, `enum`, type assertions (`as`), non-null assertions (`!`)
 
-- Use TanStack Router's file-based routing: create route files in `src/routes/`
-  following the file path structure
-- Routes export a `Route` object created with `createFileRoute(path)` or
-  `createRootRoute()`
-- The root route (`__root.tsx`) defines the layout component that wraps all
-  pages
-- Route tree is auto-generated in `src/routeTree.gen.ts` - never edit this file
+## State Management
 
-### Path Aliases
+| Concern           | Tool                                            |
+| ----------------- | ----------------------------------------------- |
+| Server/async data | TanStack Query in `features/*/api/*.queries.ts` |
+| UI/client state   | Zustand in `features/*/store/*.store.ts`        |
+| URL state         | TanStack Router search params                   |
 
-Always use path aliases for imports:
+- One Zustand store per feature, not a global monolith
+- Never store server data in Zustand
+- Use query key factories in `*.query-keys.ts`
+
+## Path Aliases
+
+Always use path aliases — never `../` from routes, pages, app, or layout:
 
 ```typescript
-import Home from "@pages/Home"; // ✅ Correct
-import Home from "../../pages/Home"; // ❌ Avoid relative paths
+import { TodosPanel } from '@features/todos'
+
+// correct
+import Home from '../../pages/Home'
+
+// wrong
 ```
 
-Available aliases:
+Aliases: `@app`, `@features`, `@lib`, `@components`, `@pages`, `@layout`,
+`@hooks`, `@utils`, `@shared`, `@/*`
 
-- `@components/*` - Reusable components
-- `@layout/*` - Layout components
-- `@pages/*` - Page components
-- `@hooks/*` - Custom hooks
-- `@utils/*` - Utility functions
-- `@shared/*` - Shared resources
-- `@/*` - Root src directory
+## Feature Structure
 
-### React Compiler
+```
+features/<name>/
+  api/          # schemas, api, query-keys, queries
+  store/        # Zustand UI state
+  components/
+  hooks/
+  index.ts      # public API
+```
 
-- React Compiler is enabled in production builds only (keeps HMR working in
-  development)
-- Follow React Compiler rules: avoid unsupported patterns that break
-  optimization
-- ESLint will enforce React Compiler compliance
+## Routing
 
-### Styling
+- TanStack Router file-based routing in `src/routes/`
+- Routes export `Route` via `createFileRoute()` — no business logic
+- `src/routeTree.gen.ts` is auto-generated — never edit
 
-- Use Tailwind CSS v4 with utility classes
-- Prettier automatically sorts Tailwind classes
-- Follow the concentric-css ordering defined in prettier config
+## React Patterns
 
-### Code Style
+- Functional components, hooks for logic
+- `useState` for local component state only
+- Cross-component UI state → Zustand
+- Server data → TanStack Query with `queryOptions()`
+- React Compiler enabled in production; ESLint enforces compliance
 
-- **No semicolons** (`semi: false`)
-- **Single quotes** for strings (`singleQuote: true`)
-- **Tabs** for indentation (`useTabs: true`)
-- **Import sorting**: React → Third-party → Aliases (@/) → Relative imports
-- **Strict TypeScript**: No unused variables/parameters allowed
+## Code Style
 
-## Development Workflows
+- No semicolons, single quotes, tabs (Prettier)
+- Import order: React → third-party → `@app` → `@lib` → `@features` → aliases →
+  relative
+- Strict TypeScript + ESLint `strictTypeChecked` with `--max-warnings 0`
 
-### Building & Running
+## Commands
 
 ```bash
-pnpm dev              # Development with HMR (no React Compiler)
-pnpm dev:compiler     # Development with React Compiler enabled
-pnpm build           # Production build (TypeScript + Vite)
-pnpm preview         # Preview production build
+pnpm dev          # development
+pnpm validate     # tsc + lint + test
+pnpm build        # validate + production build
+pnpm test         # run tests
+pnpm lint:fix     # fix lint issues
 ```
 
-### Code Quality
+## Quality Gates
 
-```bash
-pnpm lint            # ESLint with React-specific rules
-pnpm format          # Prettier with import sorting + Tailwind
-pnpm generate-types  # Generate translation types (if applicable)
-```
+- `pnpm validate` before builds
+- Husky pre-commit: typecheck + lint-staged
+- Husky pre-push: tests
 
-### React Scan Integration
-
-- Automatically enabled in development for debugging unnecessary re-renders
-- Tracks component performance and optimization opportunities
-- View results in browser dev tools
-
-## Component Patterns
-
-### Route Components
-
-```typescript
-// src/routes/example.tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-import ExamplePage from '@pages/Example'
-
-export const Route = createFileRoute('/example')({
-	component: ExamplePage,
-})
-```
-
-### Page Components
-
-```typescript
-// src/pages/Example.tsx
-function ExamplePage() {
-  return <div className='p-4'>Content</div>;
-}
-
-export default ExamplePage;
-```
-
-### Layout Components
-
-```typescript
-// src/layout/Root.tsx
-import { Outlet } from "@tanstack/react-router";
-
-function RootLayout() {
-  return (
-    <>
-      <Outlet /> {/* Renders child routes */}
-      {/* Other layout elements */}
-    </>
-  );
-}
-```
-
-## TypeScript Configuration
-
-- Strict mode enabled with comprehensive linting
-- Path aliases configured in both `tsconfig.app.json` and Vite
-- Separate configs for app code (`tsconfig.app.json`) and build tools
-  (`tsconfig.node.json`)
-
-## Performance Considerations
-
-- React Compiler optimizes production builds
-- React Scan helps identify performance issues in development
-- Vite's fast refresh works alongside React Compiler (disabled in dev to
-  preserve HMR)
+See also `AGENTS.md` and `.cursor/rules/` for Cursor-specific rules.

@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
 			__DEV__: !isProduction,
 		},
 		server: {
-			hmr: true, // Always enable HMR for development
+			hmr: true,
 		},
 		plugins: [
 			tailwindcss(),
@@ -28,15 +28,16 @@ export default defineConfig(({ mode }) => {
 		],
 		resolve: {
 			alias: {
-				// Path aliases for better imports throughout the application
-				// Instead of relative imports like '../../../components', you can use '@components/...'
-				'@components': path.resolve(__dirname, './src/components'), // Component directory alias
-				'@hooks': path.resolve(__dirname, './src/hooks'), // Custom hooks directory alias
-				'@layout': path.resolve(__dirname, './src/layout'), // Layout components directory alias
-				'@utils': path.resolve(__dirname, './src/utils'), // Utility functions directory alias
-				'@pages': path.resolve(__dirname, './src/pages'), // Page components directory alias
-				'@shared': path.resolve(__dirname, './src/shared'), // Shared resources directory alias
-				'@': path.resolve(__dirname, './src'), // Root source directory alias
+				'@app': path.resolve(__dirname, './src/app'),
+				'@components': path.resolve(__dirname, './src/components'),
+				'@features': path.resolve(__dirname, './src/features'),
+				'@hooks': path.resolve(__dirname, './src/hooks'),
+				'@layout': path.resolve(__dirname, './src/layout'),
+				'@lib': path.resolve(__dirname, './src/lib'),
+				'@utils': path.resolve(__dirname, './src/utils'),
+				'@pages': path.resolve(__dirname, './src/pages'),
+				'@shared': path.resolve(__dirname, './src/shared'),
+				'@': path.resolve(__dirname, './src'),
 			},
 		},
 	}

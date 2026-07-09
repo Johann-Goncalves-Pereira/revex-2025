@@ -40,6 +40,9 @@ const config = {
 	importOrder: [
 		'^react$', // React import first
 		'<THIRD_PARTY_MODULES>', // Third-party modules
+		'^@app/(.*)$',
+		'^@lib/(.*)$',
+		'^@features/(.*)$',
 		'^@/(.*)$', // Root imports (@/*)
 		'^@(?:/)?components/(.*)$', // Component imports
 		'^@(?:/)?hooks/(.*)$', // Custom hooks imports

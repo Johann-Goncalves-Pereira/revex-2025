@@ -1,0 +1,20 @@
+---
+description: State management conventions
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# State Management
+
+| Concern | Tool | Location |
+|---------|------|----------|
+| Server/async data | TanStack Query | `features/*/api/*.queries.ts` |
+| UI/client state | Zustand | `features/*/store/*.store.ts` |
+| URL state | TanStack Router search params | route files |
+
+## Anti-patterns
+
+- Storing server data in Zustand (use Query cache).
+- Global monolithic store (one store per feature).
+- Fetching inside components (use query hooks).
+- Duplicating Query data in local state.

@@ -1,16 +1,18 @@
 # React Boilerplate (TanStack Router + Vite)
 
-Production-oriented React 19 + TypeScript starter with strict linting, route
-generation, and quality-gated builds.
+Production-oriented React 19 + TypeScript starter with strict typing,
+feature-based architecture, quality-gated builds, and AI-enforced conventions.
 
 ## Stack
 
-- React 19 + TypeScript
+- React 19 + TypeScript (strict + `noUncheckedIndexedAccess`)
 - Vite (`rolldown-vite`) + React Compiler (production mode)
 - TanStack Router (file-based routes + generated route tree)
-- TanStack Query (with Devtools)
+- TanStack Query (server state) + Zustand (UI state)
+- Zod (schemas as single source of truth for types)
 - Tailwind CSS v4
-- ESLint + Prettier (import sorting + Tailwind class sorting)
+- ESLint strict type-checked + Prettier
+- Vitest + Testing Library
 
 ## Getting started
 
@@ -21,20 +23,68 @@ pnpm dev
 
 ## Scripts
 
-- `pnpm dev` - local development
-- `pnpm dev:compiler` - dev server in production mode
-- `pnpm dev:compiler-test` - production NODE_ENV compiler check
-- `pnpm tsc` - TypeScript project reference check
-- `pnpm lint` - ESLint checks
-- `pnpm format` - Prettier formatting
-- `pnpm build` - format + typecheck + lint + production build
-- `pnpm build:vercel` - deployment build command
-- `pnpm preview` - preview built output
+| Script            | Description                            |
+| ----------------- | -------------------------------------- |
+| `pnpm dev`        | Local development with HMR             |
+| `pnpm validate`   | Typecheck + lint + test (quality gate) |
+| `pnpm build`      | `validate` + production build          |
+| `pnpm test`       | Run tests once                         |
+| `pnpm test:watch` | Run tests in watch mode                |
+| `pnpm lint`       | ESLint with zero warnings allowed      |
+| `pnpm lint:fix`   | Auto-fix lint issues                   |
+| `pnpm format`     | Prettier formatting                    |
+| `pnpm tsc`        | TypeScript project check               |
+| `pnpm preview`    | Preview production build               |
 
-## Best-practice defaults included
+## Project structure
 
-- Strict TypeScript and stricter React/TS ESLint rules
-- Local Prettier resolution in VS Code (`prettier.preferLocal`)
-- Router plugin enabled in Vite for route generation and code splitting
-- Default not-found UI wired at router level
-- `vercel.json` configured for SPA rewrites and static asset caching
+```
+src/
+├── app/           # App bootstrap, providers, router
+├── features/      # Domain modules (api, store, components, hooks)
+├── components/    # Shared UI primitives
+├── lib/           # env validation, api client, query client
+├── layout/        # Root layout shell
+├── pages/         # Thin page composition
+├── routes/        # TanStack Router file routes (wiring only)
+└── test/          # Test utilities
+```
+
+See `src/features/todos/` for a complete reference implementation.
+
+## Typing conventions
+
+- **Zod first**: define schemas, infer types with `z.infer<typeof schema>`
+- **No duplication**: never create interfaces that mirror schemas
+- **Boundaries**: validate env and API responses at the edges
+- **Forbidden**: `any`, `enum`, type assertions (`as`)
+
+## State management
+
+| Layer        | Tool                               |
+| ------------ | ---------------------------------- |
+| Server/async | TanStack Query (`*.queries.ts`)    |
+| UI/client    | Zustand (`*.store.ts` per feature) |
+| URL          | TanStack Router search params      |
+
+## AI guidelines
+
+- **Cursor**: `.cursor/rules/` (always read `core-standards.mdc`)
+- **Copilot**: `.github/copilot-instructions.md`
+- **Agents**: `AGENTS.md`
+
+## Creating a new feature
+
+1. Create `src/features/<name>/api/<name>.schema.ts` with Zod schemas
+2. Add `api/<name>.api.ts` using `@lib/api-client`
+3. Add `api/<name>.query-keys.ts` and `api/<name>.queries.ts`
+4. Add `store/<name>-ui.store.ts` for UI state if needed
+5. Build components and hooks; export public API from `index.ts`
+6. Wire in a page or route — composition only, no business logic
+
+## Quality gates
+
+- `pnpm validate` runs before every build
+- Husky pre-commit: typecheck + lint-staged
+- Husky pre-push: tests
+- ESLint: `--max-warnings 0` with `strictTypeChecked` rules
