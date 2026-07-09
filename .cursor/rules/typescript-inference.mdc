@@ -1,0 +1,29 @@
+---
+description: TypeScript inference and Zod-first typing
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript Inference
+
+## Single source of truth
+
+```typescript
+// BAD — duplicated shape
+interface User { id: string; name: string }
+
+// GOOD — schema first, type inferred
+const userSchema = z.object({ id: z.string(), name: z.string() })
+type User = z.infer<typeof userSchema>
+```
+
+## Boundaries
+
+- Validate `import.meta.env` in `@lib/env.ts`.
+- Validate API responses in `@lib/api-client.ts` with Zod at the network boundary.
+- Use `satisfies` for const maps; use `z.enum()` for string unions.
+
+## Forbidden
+
+- `any`, `enum`, `as SomeType`, non-null assertions (`!`).
+- Interfaces that mirror an existing Zod schema.

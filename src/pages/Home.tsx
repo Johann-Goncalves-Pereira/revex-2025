@@ -1,5 +1,7 @@
+import { TodosPanel } from '@features/todos'
+
 function Home() {
-  return <div className='p-4'>aaaaa</div>;
+	return <TodosPanel />
 }
 
-export default Home;
+export default Home

@@ -1,75 +1,97 @@
-# React + TypeScript + Vite
+> **CRITICAL - FIRST RUN INSTRUCTION:**
+> This repository is a new project boilerplate. The user's very first prompt detailing what this application should be must be fully executed. Upon receiving this first prompt, you must:
+>
+> 1. Scaffolding the requested features using the boilerplate's existing stack.
+> 2. Automatically update the project name and package name across all native and configuration files.
+> 3. Update the global documentation to accurately reflect the newly created app.
+> 4. Completely remove this "FIRST RUN INSTRUCTION" block from the documentation so subsequent interactions proceed normally.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# React Boilerplate (TanStack Router + Vite)
 
-Currently, two official plugins are available:
+Production-oriented React 19 + TypeScript starter with strict typing,
+feature-based architecture, quality-gated builds, and AI-enforced conventions.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Stack
 
-## React Compiler
+- React 19 + TypeScript (strict + `noUncheckedIndexedAccess`)
+- Vite (`rolldown-vite`) + React Compiler (production mode)
+- TanStack Router (file-based routes + generated route tree)
+- TanStack Query (server state) + Zustand (UI state)
+- Zod (schemas as single source of truth for types)
+- Tailwind CSS v4
+- ESLint strict type-checked + Prettier
+- Vitest + Testing Library
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Getting started
 
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Script            | Description                            |
+| ----------------- | -------------------------------------- |
+| `pnpm dev`        | Local development with HMR             |
+| `pnpm validate`   | Typecheck + lint + test (quality gate) |
+| `pnpm build`      | `validate` + production build          |
+| `pnpm test`       | Run tests once                         |
+| `pnpm test:watch` | Run tests in watch mode                |
+| `pnpm lint`       | ESLint with zero warnings allowed      |
+| `pnpm lint:fix`   | Auto-fix lint issues                   |
+| `pnpm format`     | Prettier formatting                    |
+| `pnpm tsc`        | TypeScript project check               |
+| `pnpm preview`    | Preview production build               |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project structure
+
 ```
+src/
+├── app/           # App bootstrap, providers, router
+├── features/      # Domain modules (api, store, components, hooks)
+├── components/    # Shared UI primitives
+├── lib/           # env validation, api client, query client
+├── layout/        # Root layout shell
+├── pages/         # Thin page composition
+├── routes/        # TanStack Router file routes (wiring only)
+└── test/          # Test utilities
+```
+
+See `src/features/todos/` for a complete reference implementation.
+
+## Typing conventions
+
+- **Zod first**: define schemas, infer types with `z.infer<typeof schema>`
+- **No duplication**: never create interfaces that mirror schemas
+- **Boundaries**: validate env and API responses at the edges
+- **Forbidden**: `any`, `enum`, type assertions (`as`)
+
+## State management
+
+| Layer        | Tool                               |
+| ------------ | ---------------------------------- |
+| Server/async | TanStack Query (`*.queries.ts`)    |
+| UI/client    | Zustand (`*.store.ts` per feature) |
+| URL          | TanStack Router search params      |
+
+## AI guidelines
+
+- **Cursor rules**: `.cursor/rules/` (always read `core-standards.mdc` and `code-style.mdc`)
+- **Agents**: `AGENTS.md`
+
+## Creating a new feature
+
+1. Create `src/features/<name>/api/<name>.schema.ts` with Zod schemas
+2. Add `api/<name>.api.ts` using `@lib/api-client`
+3. Add `api/<name>.query-keys.ts` and `api/<name>.queries.ts`
+4. Add `store/<name>-ui.store.ts` for UI state if needed
+5. Build components and hooks; export public API from `index.ts`
+6. Wire in a page or route — composition only, no business logic
+
+## Quality gates
+
+- `pnpm validate` runs before every build
+- Husky pre-commit: typecheck + lint-staged
+- Husky pre-push: tests
+- ESLint: `--max-warnings 0` with `strictTypeChecked` rules
