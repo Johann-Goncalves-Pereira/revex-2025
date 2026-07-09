@@ -20,7 +20,8 @@
 		"source.organizeImports": "explicit"
 	},
 	"[ignore]": {
-		"editor.defaultFormatter": "foxundermoon.shell-format"
+		"editor.defaultFormatter": null,
+		"editor.formatOnSave": false
 	},
 	"files.watcherExclude": {
 		"**/node_modules/**": true,
